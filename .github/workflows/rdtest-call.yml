@@ -2,6 +2,9 @@ name: rdtest call
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "rdtest-call-*"
 
 jobs:
   call:
