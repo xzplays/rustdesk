@@ -1,0 +1,13 @@
+name: rdtest ping
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "rdtest-*"
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "pong ${{ github.ref }}"
