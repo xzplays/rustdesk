@@ -7,6 +7,7 @@ use hbb_common::{
     sodiumoxide::crypto::sign,
     ResultType,
 };
+use base::config::keys;
 use serde_derive::{Deserialize, Serialize};
 
 #[derive(Debug, PartialEq, Default, Serialize, Deserialize, Clone)]
@@ -248,5 +249,28 @@ mod test {
                 relay: "".to_owned(),
             }
         );
+    }
+}
+
+/// Seed the server settings of this build when the user has not configured any
+/// server yet, so a fresh install connects to our private server out of the box.
+pub fn apply_builtin_server_options() {
+    use hbb_common::config::Config;
+    let defaults = [
+        (
+            keys::OPTION_CUSTOM_RENDEZVOUS_SERVER,
+            "rustdesk.xzplay.com:31116",
+        ),
+        (keys::OPTION_RELAY_SERVER, "rustdesk.xzplay.com:31117"),
+        (keys::OPTION_API_SERVER, "https://rustdesk.xzplay.com"),
+        (
+            keys::OPTION_KEY,
+            "hZnwUQ6BgrCwB8AqpLjcvy1ekMxvbV4uNdCft64hwn4=",
+        ),
+    ];
+    for (k, v) in defaults {
+        if Config::get_option(k).is_empty() {
+            Config::set_option(k.to_owned(), v.to_owned());
+        }
     }
 }
